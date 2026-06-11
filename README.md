@@ -1,4 +1,4 @@
-# My First MCP + RhinoMCP 실습 가이드
+# 커스텀 MCP 서버 제작 실습 가이드
 
 > 감성어 기반 MCP 서버를 직접 배포하고, Claude Desktop 및 RhinoMCP와 연동하여 사용하는 실습입니다.
 
