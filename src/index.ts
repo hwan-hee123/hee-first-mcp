@@ -121,4 +121,13 @@ export default {
             { headers, status: 200 }
           );
         }
-      };   
+      return new Response(JSON.stringify({ error: "Method Not Allowed" }), { headers, status: 405 });
+
+    } catch (error: any) {
+      return new Response(
+        JSON.stringify({ jsonrpc: "2.0", error: { code: -32603, message: error.message } }),
+        { headers, status: 500 }
+      );
+    }
+  }
+};
