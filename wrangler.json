@@ -1,0 +1,8 @@
+{
+  "name": "my-first-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-12",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
