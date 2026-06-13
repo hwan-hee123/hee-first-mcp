@@ -1,1 +1,692 @@
+<!DOCTYPE html>
+<html class="dark" lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LUMEI | Architectural Lighting</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "surface-container": "#201f1f",
+          "secondary-fixed": "#e9e1d9",
+          "primary": "#e5c487",
+          "on-tertiary-container": "#334063",
+          "on-error": "#690005",
+          "surface-dim": "#131313",
+          "inverse-primary": "#735b28",
+          "surface-container-high": "#2a2a2a",
+          "on-surface": "#e5e2e1",
+          "on-primary-fixed-variant": "#594312",
+          "on-secondary": "#34302a",
+          "on-background": "#e5e2e1",
+          "background": "#131313",
+          "tertiary": "#bac7f2",
+          "tertiary-container": "#9facd5",
+          "surface-bright": "#3a3939",
+          "muted-gray": "#8A8A8A",
+          "tertiary-fixed-dim": "#b8c5f0",
+          "surface-tint": "#e3c285",
+          "tertiary-fixed": "#dae2ff",
+          "on-primary": "#402d00",
+          "inverse-surface": "#e5e2e1",
+          "secondary-container": "#4d4842",
+          "surface-container-highest": "#353534",
+          "surface": "#131313",
+          "error": "#ffb4ab",
+          "outline": "#998f81",
+          "primary-container": "#c8a96e",
+          "secondary-fixed-dim": "#cdc5bd",
+          "surface-container-lowest": "#0e0e0e",
+          "on-tertiary-fixed": "#0b1a3b",
+          "on-secondary-fixed-variant": "#4a4640",
+          "on-secondary-fixed": "#1e1b16",
+          "on-tertiary-fixed-variant": "#394669",
+          "on-primary-fixed": "#261900",
+          "on-surface-variant": "#d0c5b5",
+          "on-tertiary": "#222f51",
+          "secondary": "#cdc5bd",
+          "surface-container-low": "#1c1b1b",
+          "on-secondary-container": "#beb7af",
+          "on-error-container": "#ffdad6",
+          "outline-variant": "#4d463a",
+          "primary-fixed": "#ffdea3",
+          "warm-white": "#F8F5F1",
+          "surface-elevation": "rgba(26, 23, 18, 0.6)",
+          "error-container": "#93000a",
+          "surface-variant": "#353534",
+          "inverse-on-surface": "#313030",
+          "primary-fixed-dim": "#e3c285",
+          "on-primary-container": "#533d0c"
+        },
+        borderRadius: {
+          "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"
+        },
+        spacing: {
+          "tablet-margin": "64px", "mobile-margin": "24px",
+          "section-gap": "160px", "gutter": "32px", "desktop-margin": "120px"
+        },
+        fontFamily: {
+          "headline-lg": ["Playfair Display"], "display-lg": ["Playfair Display"],
+          "display-lg-mobile": ["Playfair Display"], "body-lg": ["DM Sans"],
+          "headline-md": ["Playfair Display"], "label-caps": ["DM Sans"],
+          "body-md": ["DM Sans"], "accent-italic": ["Playfair Display"]
+        },
+        fontSize: {
+          "headline-lg": ["48px", {lineHeight:"56px",fontWeight:"400"}],
+          "display-lg": ["72px", {lineHeight:"80px",letterSpacing:"-0.02em",fontWeight:"400"}],
+          "display-lg-mobile": ["48px", {lineHeight:"56px",letterSpacing:"-0.01em",fontWeight:"400"}],
+          "body-lg": ["18px", {lineHeight:"32px",letterSpacing:"0.08em",fontWeight:"400"}],
+          "headline-md": ["32px", {lineHeight:"40px",fontWeight:"400"}],
+          "label-caps": ["12px", {lineHeight:"16px",letterSpacing:"0.15em",fontWeight:"500"}],
+          "body-md": ["16px", {lineHeight:"28px",letterSpacing:"0.08em",fontWeight:"400"}],
+          "accent-italic": ["inherit", {fontWeight:"400"}]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: #131313; }
+  ::-webkit-scrollbar-thumb { background: #e5c487; }
 
+  body { background-color: #131313; color: #e5e2e1; overflow-x: hidden; }
+
+  /* Glass nav */
+  .glass-effect {
+    backdrop-filter: blur(20px);
+    background: rgba(26, 23, 18, 0.6);
+    border-bottom: 1px solid rgba(248, 245, 241, 0.1);
+  }
+
+  /* Page transitions */
+  .page { display: none; opacity: 0; transition: opacity 0.5s ease; }
+  .page.active { display: block; opacity: 1; }
+
+  /* ── Designers ── */
+  .designer-card:hover .designer-image { transform: scale(1.05); filter: grayscale(0%); }
+  .designer-image { transition: all 0.8s cubic-bezier(0.16,1,0.3,1); filter: grayscale(40%); }
+
+  /* ── About ── */
+  .image-overlay { background: linear-gradient(to bottom, rgba(19,19,19,0) 0%, rgba(19,19,19,0.8) 100%); }
+  .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+  .reveal-on-scroll.active { opacity: 1; transform: translateY(0); }
+
+  /* ── Products ── */
+  .filter-checkbox {
+    appearance: none; width: 14px; height: 14px;
+    border: 1px solid #4d463a; background: transparent;
+    cursor: pointer; position: relative; margin-right: 12px;
+  }
+  .filter-checkbox:checked { background: #e5c487; border-color: #e5c487; }
+  .filter-checkbox:checked + label { color: #e5c487; }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    display: inline-block; vertical-align: middle;
+  }
+</style>
+</head>
+<body class="font-body-md antialiased">
+
+<!-- ═══════════════════════════════════════
+     SHARED NAVIGATION
+════════════════════════════════════════ -->
+<nav id="main-nav" class="fixed top-0 w-full z-50 glass-effect flex justify-between items-center px-6 md:px-desktop-margin h-20 transition-all duration-300 ease-in-out">
+  <div class="font-headline-md text-headline-md text-primary tracking-widest uppercase cursor-pointer" onclick="showPage('products')">LUMEI</div>
+  <div class="hidden md:flex items-center gap-10">
+    <a class="nav-link font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer pb-1" data-page="products" onclick="showPage('products')">Products</a>
+    <a class="nav-link font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer pb-1" data-page="designers" onclick="showPage('designers')">Designers</a>
+    <a class="nav-link font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer pb-1" data-page="about" onclick="showPage('about')">About</a>
+    <a class="nav-link font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer pb-1" data-page="contact" onclick="showPage('contact')">Contact</a>
+  </div>
+  <div class="flex items-center gap-6">
+    <button class="hover:opacity-80 transition-opacity">
+      <span class="material-symbols-outlined text-on-surface">search</span>
+    </button>
+    <button class="text-primary hover:opacity-70 transition-all">
+      <span class="material-symbols-outlined">shopping_bag</span>
+    </button>
+    <button class="md:hidden text-primary">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE: PRODUCTS
+════════════════════════════════════════ -->
+<div id="page-products" class="page">
+  <main class="mt-40 max-w-screen-2xl mx-auto px-6 md:px-desktop-margin pb-24">
+
+    <!-- Breadcrumbs -->
+    <nav class="mb-12 flex items-center space-x-2 font-label-caps text-[10px] text-muted-gray uppercase tracking-widest">
+      <a class="hover:text-primary transition-colors" href="#">Home</a>
+      <span>/</span>
+      <span class="text-on-surface">Products</span>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="mb-24 text-center">
+      <h1 class="font-display-lg text-display-lg text-on-surface">Our Collection</h1>
+    </header>
+
+    <div class="flex flex-col lg:flex-row gap-gutter">
+
+      <!-- Sidebar Filters -->
+      <aside class="w-full lg:w-64 flex-shrink-0 space-y-12">
+        <div>
+          <h3 class="font-label-caps text-label-caps text-muted-gray mb-6 tracking-[0.2em] uppercase">Filter By</h3>
+          <div class="border-t border-outline-variant pt-6 mb-8">
+            <button class="flex justify-between items-center w-full group mb-6">
+              <span class="font-label-caps text-on-surface">Mode</span>
+              <span class="material-symbols-outlined text-sm">keyboard_arrow_up</span>
+            </button>
+            <ul class="space-y-4">
+              <li class="flex items-center"><input class="filter-checkbox" id="relax-mode" type="checkbox"><label class="font-label-caps text-on-surface-variant hover:text-primary cursor-pointer transition-colors" for="relax-mode">Relax Mode</label></li>
+              <li class="flex items-center"><input class="filter-checkbox" id="focus-mode" type="checkbox"><label class="font-label-caps text-on-surface-variant hover:text-primary cursor-pointer transition-colors" for="focus-mode">Focus Mode</label></li>
+              <li class="flex items-center"><input class="filter-checkbox" id="night-mode" type="checkbox"><label class="font-label-caps text-on-surface-variant hover:text-primary cursor-pointer transition-colors" for="night-mode">Night Mode</label></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Product Grid -->
+      <section class="flex-grow">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-16 gap-x-gutter">
+
+          <!-- Aura Table Lamp -->
+          <div class="group cursor-pointer">
+            <div class="relative aspect-[3/4] overflow-hidden bg-surface-container mb-6">
+              <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsIUoW-k6iGUkC_M24ZM4RtcoEEV2aGfbUeEeuowSo_Oyia60zDE9wwn20k1ja1R4erYAsB0yTyJJWxaranlEtjHCSVtPt3mMu8tCC-0rSs-3SwCiQYBrb7y0lvuu-gPjiXOROEDVwCvvpjh0LleRP3IwsT1M9ZOXuKBp5SqtNiA-R-V7cZbhFA2TbhrBZQs19KPY4HbAXg_fThqVJI93FuspVD5ekeCm9LFGf4wAoHxiu0Q-m_pKDhQiHgHass6Ol2wquf24WGXw" alt="Aura Table Lamp">
+            </div>
+            <h4 class="font-display-lg text-body-lg text-on-surface mb-1">Aura Table Lamp</h4>
+            <p class="font-label-caps text-label-caps text-muted-gray">by Neil Poulton</p>
+          </div>
+
+          <!-- Solis Pendant -->
+          <div class="group cursor-pointer">
+            <div class="relative aspect-[3/4] overflow-hidden bg-surface-container mb-6">
+              <div class="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-surface/40 backdrop-blur-sm flex items-center justify-center">
+                <div class="w-24 h-24 rounded-full bg-warm-white flex flex-col items-center justify-center text-surface p-4 text-center">
+                  <span class="material-symbols-outlined mb-1">search</span>
+                  <span class="text-[10px] font-bold uppercase tracking-widest leading-none">Quick View</span>
+                </div>
+              </div>
+              <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcMkJN04B56_T6PnTrtRz86fuX0hBqrYbYxjGVrlQc3GpgnjgLIgLCYDsOjIYjIDtUia5X_qAiXLuNwkqmOMmKA0pZLObpQLyjKOKd5xq6XI-WKtLryBAMNDWVcDgwwVy1BWFH2ZEcJrPii89rhocCMDEhBhPV9ItKmj60vp61Zx3-WJPqUq_srn7DYoQzTV-qL1YOF5sz1ZyrskSUsQG-XPyRRz9Nrz1X2FonFCwu4MW7q0f7-9HjjcXl_FzQi5WvutLzxODPHmA" alt="Solis Pendant">
+            </div>
+            <h4 class="font-display-lg text-body-lg text-on-surface mb-1">Solis Pendant</h4>
+            <p class="font-label-caps text-label-caps text-muted-gray">by Patricia Urquiola</p>
+          </div>
+
+          <!-- Luna Floor Lamp -->
+          <div class="group cursor-pointer">
+            <div class="relative aspect-[3/4] overflow-hidden bg-surface-container mb-6">
+              <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCI85XE12ngYQhrIeH16yuHmLEQGYCpMEJUyh9SGa28Zqh0ZEA1qhNPz2n6NJqHVzg0SdPy5UHHwCaHhqAYrHKV6JlmgEscQppSjc69LK419yc4As4Kakh17QOuSfcQVXpFmc7w3lzejdQ1IArwP_my4zVQ8Ndyh9wrl8AgmX-t4ti-vt2hs1sSJZ3sccmxe0wTZ0WMPMR0xF9UPfdPg37q6xrWDAK37nhF9b0ATEvnBw4_PRKX3NNsnLNwMgut-1RPI5ADMYY0nvQ" alt="Luna Floor Lamp">
+            </div>
+            <h4 class="font-display-lg text-body-lg text-on-surface mb-1">Luna Floor Lamp</h4>
+            <p class="font-label-caps text-label-caps text-muted-gray">by Neil Poulton</p>
+          </div>
+
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-24 flex justify-center items-center space-x-4">
+          <button class="w-10 h-10 border border-outline-variant flex items-center justify-center text-muted-gray hover:border-primary transition-colors">
+            <span class="material-symbols-outlined text-sm">chevron_left</span>
+          </button>
+          <button class="w-10 h-10 border border-primary bg-primary text-on-primary font-label-caps">1</button>
+          <button class="w-10 h-10 border border-outline-variant font-label-caps text-on-surface hover:border-primary transition-colors">2</button>
+          <button class="w-10 h-10 border border-outline-variant font-label-caps text-on-surface hover:border-primary transition-colors">3</button>
+          <button class="w-10 h-10 border border-outline-variant flex items-center justify-center text-on-surface hover:border-primary transition-colors">
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Editorial Section: Ruby Red -->
+    <section class="mt-section-gap grid grid-cols-1 lg:grid-cols-2 bg-surface-container-low overflow-hidden">
+      <div class="p-16 lg:p-desktop-margin flex flex-col justify-center">
+        <span class="font-label-caps text-primary tracking-[0.4em] uppercase mb-8">Exclusive Series</span>
+        <h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-8">The Ruby Red Collection</h2>
+        <p class="font-body-md text-on-surface-variant max-w-md mb-12 leading-relaxed opacity-80">
+          A limited edition exploration of mood and pigment. The Ruby Red series introduces a bold tonal shift to our classic silhouettes, inspired by the depth of vintage wine and cinematic shadows.
+        </p>
+        <a class="inline-flex items-center space-x-4 group" href="#">
+          <span class="px-8 py-4 bg-primary text-on-primary font-label-caps text-sm uppercase tracking-widest hover:opacity-90 transition-opacity">Discover the Collection</span>
+        </a>
+      </div>
+      <div class="relative h-[400px] lg:h-auto overflow-hidden">
+        <img class="w-full h-full object-cover"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKQnq6o7cO36eFPEkBqN6s2Sb2Dy_5DzadtGECP2NKBoSOCsiAwyxGdvHk6XeVQ5E2SZScO2on8iw3XBAfuxulTTYdIbmdJw24r61Zq_cX1Mbxwv7-9XZbcIJLmEHHmpuFegCscJWQwBIjuDxpBJfaprPjLs_IV5lQGY1uXAKnmxKlXq8seJ6I140PqMPxG81PWMzxCk4bCdqmragD-RrqFvxum6s3pwlFwuBFSG-0Ze0xYlM2yogBn-zqnmeCK_AvWbPUNdtV6Yk" alt="Ruby Red Collection">
+      </div>
+    </section>
+
+    <!-- Products in Situ -->
+    <section class="mt-section-gap">
+      <header class="flex justify-between items-end mb-16">
+        <h2 class="font-display-lg text-headline-lg text-on-surface">Products in Situ</h2>
+        <div class="hidden md:flex space-x-4">
+          <button class="w-12 h-12 border border-outline-variant flex items-center justify-center text-muted-gray hover:text-primary transition-colors">
+            <span class="material-symbols-outlined">west</span>
+          </button>
+          <button class="w-12 h-12 border border-outline-variant flex items-center justify-center text-muted-gray hover:text-primary transition-colors">
+            <span class="material-symbols-outlined">east</span>
+          </button>
+        </div>
+      </header>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-gutter pb-8">
+        <div class="flex-shrink-0">
+          <div class="aspect-square bg-surface-container overflow-hidden mb-6">
+            <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="Luna Table Lamp in interiors"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsIUoW-k6iGUkC_M24ZM4RtcoEEV2aGfbUeEeuowSo_Oyia60zDE9wwn20k1ja1R4erYAsB0yTyJJWxaranlEtjHCSVtPt3mMu8tCC-0rSs-3SwCiQYBrb7y0lvuu-gPjiXOROEDVwCvvpjh0LleRP3IwsT1M9ZOXuKBp5SqtNiA-R-V7cZbhFA2TbhrBZQs19KPY4HbAXg_fThqVJI93FuspVD5ekeCm9LFGf4wAoHxiu0Q-m_pKDhQiHgHass6Ol2wquf24WGXw">
+          </div>
+          <p class="font-body-md text-on-surface-variant text-sm">Luna Table Lamp in high-end interiors</p>
+        </div>
+        <div class="flex-shrink-0">
+          <div class="aspect-square bg-surface-container overflow-hidden mb-6">
+            <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="Solis Pendant in office"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcMkJN04B56_T6PnTrtRz86fuX0hBqrYbYxjGVrlQc3GpgnjgLIgLCYDsOjIYjIDtUia5X_qAiXLuNwkqmOMmKA0pZLObpQLyjKOKd5xq6XI-WKtLryBAMNDWVcDgwwVy1BWFH2ZEcJrPii89rhocCMDEhBhPV9ItKmj60vp61Zx3-WJPqUq_srn7DYoQzTV-qL1YOF5sz1ZyrskSUsQG-XPyRRz9Nrz1X2FonFCwu4MW7q0f7-9HjjcXl_FzQi5WvutLzxODPHmA">
+          </div>
+          <p class="font-body-md text-on-surface-variant text-sm">Solis Pendant in executive office</p>
+        </div>
+        <div class="flex-shrink-0">
+          <div class="aspect-square bg-surface-container overflow-hidden mb-6">
+            <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="Luna Floor Lamp in gallery"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCI85XE12ngYQhrIeH16yuHmLEQGYCpMEJUyh9SGa28Zqh0ZEA1qhNPz2n6NJqHVzg0SdPy5UHHwCaHhqAYrHKV6JlmgEscQppSjc69LK419yc4As4Kakh17QOuSfcQVXpFmc7w3lzejdQ1IArwP_my4zVQ8Ndyh9wrl8AgmX-t4ti-vt2hs1sSJZ3sccmxe0wTZ0WMPMR0xF9UPfdPg37q6xrWDAK37nhF9b0ATEvnBw4_PRKX3NNsnLNwMgut-1RPI5ADMYY0nvQ">
+          </div>
+          <p class="font-body-md text-on-surface-variant text-sm">Luna Floor Lamp in art space</p>
+        </div>
+        <div class="flex-shrink-0">
+          <div class="aspect-square bg-surface-container overflow-hidden mb-6">
+            <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="Aura Lamp in minimal space"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPpw-TmAzsgxdNeF2nb49G86jzaPkpTUG_aLmLndw1m-4-5PA_8471LGhz0DESZ4BTEr67BIzAbMs0bHWisPjHRrlm3-XNVPBYPsH3cCrnXM-7rbhRYwX--DsK7mNCyoI3Vifd7xt6nGK5S6p-HBU-YYmy_oqkqtTnL892mhyAAkU8UxkfM7cZZH7Ypkn5YbvFpS_nmAnOnzDxezF5wp_ku3Ty7OGN_PyeYd14CrhIICrRY1VVPJhAKHnYhiLzjKxjyhuiv1TTBfg">
+          </div>
+          <p class="font-body-md text-on-surface-variant text-sm">Aura Lamp in minimal space</p>
+        </div>
+        <div class="flex-shrink-0">
+          <div class="aspect-square bg-surface-container overflow-hidden mb-6">
+            <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="Solis Pendant architectural"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMTaB_vhxqRjd5OCWpD-ZOm4F9Wd8g3ciZUnsHmMZfEXs4ae9Jyp0A_myi2_A1ZMxFqjyPDVAY6DluVYLrEdf8iDguOWqezeCDQ_cpbU0Nx0YM1kJvqem7CrntcBcGpZgvmV3BZHX_O9QLPbm0D3AbDERsApq0jd6DQMryajAvsdSJE8qYvLv148nt3k7gA-8XQv8g774JzxE50qGRjpvAA1hGlmS_wkIZ5dfO_zoBhnIM3GdgeQMdhYbhK9Rl4x9Mhv4yyd7FnrE">
+          </div>
+          <p class="font-body-md text-on-surface-variant text-sm">Solis Pendant in architectural context</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Products Footer -->
+  <footer class="bg-surface-container-lowest py-section-gap border-t border-outline-variant">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter px-6 md:px-desktop-margin max-w-screen-2xl mx-auto">
+      <div class="md:col-span-4 mb-12 md:mb-0">
+        <span class="font-display-lg text-headline-lg text-primary block mb-8">LUMEI</span>
+        <p class="text-on-surface-variant max-w-xs text-sm leading-relaxed">
+          Architectural lighting designed to sculpt the atmosphere of contemporary living. Craftsmanship and light in perfect harmony.
+        </p>
+        <div class="flex space-x-6 mt-12">
+          <a class="hover:text-primary transition-colors duration-200" href="#"><span class="material-symbols-outlined">public</span></a>
+          <a class="hover:text-primary transition-colors duration-200" href="#"><span class="material-symbols-outlined">photo_camera</span></a>
+          <a class="hover:text-primary transition-colors duration-200" href="#"><span class="material-symbols-outlined">play_circle</span></a>
+        </div>
+      </div>
+      <div class="md:col-span-2">
+        <h5 class="font-label-caps text-on-surface mb-8 uppercase tracking-widest">Products</h5>
+        <ul class="space-y-4">
+          <li><a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Store Locator</a></li>
+          <li><a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Catalogues</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <h5 class="font-label-caps text-on-surface mb-8 uppercase tracking-widest">Company</h5>
+        <ul class="space-y-4">
+          <li><a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Careers</a></li>
+          <li><a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">FAQs</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <h5 class="font-label-caps text-on-surface mb-8 uppercase tracking-widest">Legal</h5>
+        <ul class="space-y-4">
+          <li><a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Privacy Policy</a></li>
+          <li><a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Terms of Service</a></li>
+          <li><a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Sustainability</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-12 mt-24 pt-12 border-t border-outline-variant/30 flex flex-col md:flex-row justify-between items-center text-xs text-muted-gray tracking-widest uppercase">
+        <span>© 2024 LUMEI ARCHITECTURAL LIGHTING. ALL RIGHTS RESERVED.</span>
+        <div class="flex space-x-8 mt-4 md:mt-0">
+          <a class="hover:text-primary" href="#">Cookie Settings</a>
+          <a class="hover:text-primary" href="#">Accessibility</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE: DESIGNERS
+════════════════════════════════════════ -->
+<div id="page-designers" class="page">
+  <main class="pt-40 md:pt-64">
+
+    <!-- Hero Header -->
+    <section class="px-mobile-margin md:px-desktop-margin mb-32 max-w-7xl mx-auto">
+      <span class="font-label-caps text-label-caps text-primary uppercase mb-6 block tracking-[0.3em]">Collaborators</span>
+      <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg mb-8 max-w-4xl leading-tight">
+        The Minds Behind <br>
+        <span class="italic font-accent-italic opacity-80">the Light.</span>
+      </h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+        We partner with visionary industrial designers and architects to push the boundaries of luminosity. Each collection is a testament to the relationship between form, shadow, and the human experience.
+      </p>
+    </section>
+
+    <!-- Designers Grid -->
+    <section class="px-mobile-margin md:px-desktop-margin mb-section-gap max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter lg:gap-12">
+
+        <div class="designer-card group cursor-pointer">
+          <div class="aspect-[3/4] overflow-hidden mb-8 bg-surface-container-low relative">
+            <img alt="전어진" class="designer-image w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqRya9tn_jULfd-FwkLhF29eFHN7QbI5kn0b1mAq67BfxPavFUWpNaZ-bkpu7r35EXQYjXhkm0wEFo-0gxVNzSlx0xRdPrjlrjrHWwcPJcSZVF7NuaSqrcF1oouD26uKY9Os_3u5wUFOmwI7AoCakO3Y4stj3Wg6iQS7iTDGBEbmx_PtNXzHc8c7dC9ysIpaKcdPKCmSV39TauPzh9DsC7iDZz66aFh4kGxQ9M3oO1evNrkXVWHuDObhFW7yMqOhPQQCCBquEev4s">
+            <div class="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          </div>
+          <div class="space-y-2">
+            <h3 class="font-headline-md text-[24px] text-on-surface">전어진</h3>
+            <p class="font-label-caps text-label-caps text-muted-gray tracking-[0.2em] uppercase">제품 디자이너</p>
+            <a class="inline-block pt-4 font-body-md text-primary text-[14px] hover:text-warm-white transition-colors border-b border-transparent hover:border-primary" href="mailto:qaz1234@naver.com">qaz1234@naver.com</a>
+          </div>
+        </div>
+
+        <div class="designer-card group cursor-pointer lg:mt-16">
+          <div class="aspect-[3/4] overflow-hidden mb-8 bg-surface-container-low relative">
+            <img alt="권주은" class="designer-image w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaRCpjqKwkhEPQS7ib37gzLh9iRjDHX5XPw8EF4EzVCpP0UjBigCBFE2-cIf7dG8jthg5yVI2X9v2oG1gmKgGgK-TxkpmK0tWsP38tL0HT8kJ8wncIMtZ5hbAHqypASTfNkk-beK833CnSiLYGdZaK0tvwnQUQvsCCDHrdKH7T21khHqGgUEOzD6yV4G8NrA83-Oi7Wp2umA6fCx3hpqvfx1j-1ycPctAWydqVcGG8kDqRB76zCVqjepHz6qOIe8lsfscpzzX1374">
+            <div class="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          </div>
+          <div class="space-y-2">
+            <h3 class="font-headline-md text-[24px] text-on-surface">권주은</h3>
+            <p class="font-label-caps text-label-caps text-muted-gray tracking-[0.2em] uppercase">BX 디자이너</p>
+            <a class="inline-block pt-4 font-body-md text-primary text-[14px] hover:text-warm-white transition-colors border-b border-transparent hover:border-primary" href="mailto:wsx1234@naver.com">wsx1234@naver.com</a>
+          </div>
+        </div>
+
+        <div class="designer-card group cursor-pointer">
+          <div class="aspect-[3/4] overflow-hidden mb-8 bg-surface-container-low relative">
+            <img alt="최환희" class="designer-image w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFDt4sEVvAnNtXOCtBERq3NxZtKXepbVFz0AZv3n0KyXzyxRiNszhPtcL9RVqpzP5Sposq42T8bundAvZxkqItH5iuRHklZKlMgCYFGp9X23L72B6i8vsRMIvqUQNmObHnO1ImUByusKI2kxlxMv9OulxYGoA1U6vjtWR6p2fWgsS5xNA_YJl2e3ra3snqEBr5BPljqG9SnZUDHixb0DNKbQYt31Xrq7AZPRN6GAsJzdsT154D24X6CpzKLEYhJgYUgmo0MZsUMwo">
+            <div class="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          </div>
+          <div class="space-y-2">
+            <h3 class="font-headline-md text-[24px] text-on-surface">최환희</h3>
+            <p class="font-label-caps text-label-caps text-muted-gray tracking-[0.2em] uppercase">제품 디자이너</p>
+            <a class="inline-block pt-4 font-body-md text-primary text-[14px] hover:text-warm-white transition-colors border-b border-transparent hover:border-primary" href="mailto:edc1234@naver.com">edc1234@naver.com</a>
+          </div>
+        </div>
+
+        <div class="designer-card group cursor-pointer lg:mt-16">
+          <div class="aspect-[3/4] overflow-hidden mb-8 bg-surface-container-low relative">
+            <img alt="김은지" class="designer-image w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFyY8dzG23WYkz1U6-9N_8lADjD8nXHczio_1tOwqjhwZXdduLfbNbo6PdtDKKHch7_aMWByDCmhlo9qtjuFGGi8DCvJFD0zGWLQp0LwmkSdQXpzYKZQIRVt2JavSvjrNeUWfN3zCR0eFO4Sy82lF7T6COOKVVKn0agXkd0qan9ZtqqgedRcJ3OdNcmwZZl4OAzw6NCjaSgzh5pCwoTgp2IhOAcgK_PqL7juZs3dujAQoeCHmq8imoUy_xMDDLKh_4RFVwYVWxorY">
+            <div class="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          </div>
+          <div class="space-y-2">
+            <h3 class="font-headline-md text-[24px] text-on-surface">김은지</h3>
+            <p class="font-label-caps text-label-caps text-muted-gray tracking-[0.2em] uppercase">그래픽 디자이너</p>
+            <a class="inline-block pt-4 font-body-md text-primary text-[14px] hover:text-warm-white transition-colors border-b border-transparent hover:border-primary" href="mailto:rfv1234@naver.com">rfv1234@naver.com</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Designers CTA -->
+    <section class="bg-surface-container-lowest py-section-gap px-mobile-margin md:px-desktop-margin text-center">
+      <div class="max-w-3xl mx-auto space-y-12">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface">Let's craft the future of illumination.</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant italic">We are always looking for visionary voices to join our design collective.</p>
+        <div class="flex justify-center">
+          <button class="bg-primary text-on-primary px-12 py-5 rounded-sm font-label-caps text-label-caps tracking-widest hover:opacity-90 transition-all flex items-center gap-3">
+            PARTNER WITH US
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-surface w-full py-section-gap flex flex-col items-center justify-center px-mobile-margin md:px-desktop-margin gap-8 border-t border-warm-white/5">
+    <div class="font-headline-lg text-headline-lg text-on-surface tracking-[0.2em]">LUMEI</div>
+    <div class="flex flex-wrap justify-center gap-8 md:gap-16">
+      <a class="font-label-caps text-label-caps text-muted-gray hover:text-primary transition-colors" href="#">Privacy Policy</a>
+      <a class="font-label-caps text-label-caps text-muted-gray hover:text-primary transition-colors" href="#">Terms of Service</a>
+      <a class="font-label-caps text-label-caps text-muted-gray hover:text-primary transition-colors" href="#">Sustainability</a>
+      <a class="font-label-caps text-label-caps text-muted-gray hover:text-primary transition-colors" href="#">Press</a>
+    </div>
+    <p class="font-body-md text-body-md text-muted-gray tracking-widest opacity-50">© 2024 LUMEI. ARCHITECTURAL LIGHTING SOLUTIONS.</p>
+  </footer>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE: ABOUT
+════════════════════════════════════════ -->
+<div id="page-about" class="page">
+  <main>
+
+    <!-- Hero -->
+    <section class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 z-0">
+        <img alt="Lumei Ambient Lighting" class="w-full h-full object-cover opacity-60" id="about-hero-img"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ9EXADnFcVNzI9nwPLLh5SSfWnrUWb24oIIONODoxOKeiVhMobyn38d8J6LCsPaC9qWDHY7I6UmGBCs20jU1DjBFyVq5OMlQixSMIXmUV8RUkDkSxq44oaICadmSz8fmd85eVLaY_Zo2u_t-g0FxAL0vEfmo6MgKUTtDSPt5CTUjjPgFnPk5A_M6_YgVSGuZ_t-nXxJaSs2C2082WoSampsM422r5Sov6VtFFJMdTLmaFfkxyXmDVsFY5BYAZMqJVQfkdR6cPy94"/>
+        <div class="absolute inset-0 image-overlay"></div>
+      </div>
+      <div class="relative z-10 text-center px-mobile-margin max-w-4xl">
+        <p class="font-label-caps text-label-caps text-primary tracking-[0.3em] mb-6 reveal-on-scroll">ARCHITECTURAL LIGHTING SOLUTIONS</p>
+        <h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-warm-white mb-8 leading-tight reveal-on-scroll">
+          원하는 만큼의 빛<br/>
+          <span class="font-accent-italic italic text-primary">당신이 원하는 만큼의</span> 공간을 채웁니다.
+        </h1>
+        <div class="w-px h-24 bg-primary mx-auto opacity-50 reveal-on-scroll" style="transition-delay:200ms;"></div>
+      </div>
+    </section>
+
+    <!-- Meaning of Lumei -->
+    <section class="py-section-gap px-6 md:px-desktop-margin max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+      <div class="md:col-span-5 reveal-on-scroll">
+        <div class="font-label-caps text-label-caps text-muted-gray mb-4 tracking-widest">NOMENCLATURE</div>
+        <h2 class="font-headline-lg text-headline-lg text-warm-white mb-8">The Meaning of<br/><span class="text-primary">LUMEI (루메이)</span></h2>
+        <div class="space-y-6 text-body-lg font-body-lg text-on-surface-variant">
+          <p><span class="text-warm-white font-bold">Lumen</span>, the Latin root for light, meets <span class="text-warm-white font-bold">柔 (Rou)</span>, the Oriental essence of softness.</p>
+          <p>Lumei represents the bridge between technical brilliance and emotional gentleness. We don't just illuminate surfaces; we soften the boundaries of your world.</p>
+        </div>
+      </div>
+      <div class="md:col-span-6 md:col-start-8 relative reveal-on-scroll" style="transition-delay:150ms;">
+        <div class="aspect-[4/5] bg-surface-container overflow-hidden">
+          <img alt="Lumei Materiality" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTuXwABxsuHaKHI_suImuHi2xAifpbwQ5c3vWuhj0_ZFpHUCFX1tBeSgucMOuP-8zR3tp8jlUebfjjdX4weBU4fgXp8w3Gv5UC1owjUy_AA3mF2_ywiyna_kSoZkNpDgP3m9mQaKxSCrurXdMCXmgjcgtkIqzxZebD7wRN7L9xbH2v5x8wwbVvPi508Y0TsXcwUoqtmXR8FY8UF7weoK1L8Uwi2JtWb-V-5DXpdAO8WLsk2vcF8MQMcNt2IJmsGGq3rm3w16h-ADc"/>
+        </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-primary/10 border border-primary/20 backdrop-blur-xl hidden md:flex items-center justify-center p-8">
+          <p class="font-label-caps text-[10px] text-primary text-center leading-relaxed">SINCE 2024<br/>SEOUL / MILAN</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Philosophy -->
+    <section class="bg-surface-container-lowest py-section-gap">
+      <div class="px-6 md:px-desktop-margin max-w-7xl mx-auto">
+        <div class="text-center mb-24 reveal-on-scroll">
+          <p class="font-label-caps text-label-caps text-primary tracking-widest mb-4">CORE PHILOSOPHY</p>
+          <h2 class="font-display-lg text-display-lg-mobile md:text-headline-lg text-warm-white">"빛은 기능이 아니라 감각이다"</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div class="p-12 bg-surface border border-warm-white/5 reveal-on-scroll" style="transition-delay:100ms;">
+            <span class="material-symbols-outlined text-primary text-4xl mb-6">thermostat</span>
+            <h3 class="font-headline-md text-headline-md text-warm-white mb-4">Temperature</h3>
+            <p class="text-body-md font-body-md text-muted-gray">우리는 단순히 밝기를 조절하는 것이 아니라, 공간의 온도를 조절합니다. 가장 차가운 집중의 시간부터 가장 따뜻한 휴식의 순간까지.</p>
+          </div>
+          <div class="p-12 bg-surface border border-warm-white/5 reveal-on-scroll" style="transition-delay:200ms;">
+            <span class="material-symbols-outlined text-primary text-4xl mb-6">blur_on</span>
+            <h3 class="font-headline-md text-headline-md text-warm-white mb-4">Atmosphere</h3>
+            <p class="text-body-md font-body-md text-muted-gray">Lumei는 On/Off 스위치 그 이상의 경험을 제공합니다. 빛이 공간에 닿는 질감을 설계하여 그곳에 머무는 사람의 감각을 일깨웁니다.</p>
+          </div>
+          <div class="p-12 bg-surface border border-warm-white/5 reveal-on-scroll" style="transition-delay:300ms;">
+            <span class="material-symbols-outlined text-primary text-4xl mb-6">auto_awesome</span>
+            <h3 class="font-headline-md text-headline-md text-warm-white mb-4">Tuning</h3>
+            <p class="text-body-md font-body-md text-muted-gray">당신의 기분에 따라, 당신의 필요에 따라 빛의 세밀한 결을 튜닝하세요. 공간은 당신의 의도대로 다시 태어납니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand Story -->
+    <section class="py-section-gap px-6 md:px-desktop-margin max-w-7xl mx-auto overflow-hidden">
+      <div class="flex flex-col md:flex-row gap-24 items-start">
+        <div class="w-full md:w-1/2 reveal-on-scroll">
+          <div class="font-label-caps text-label-caps text-muted-gray mb-4 tracking-widest">BRAND STORY</div>
+          <h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-warm-white mb-12 leading-none">The Moment of<br/><span class="italic font-accent-italic text-primary">Returning Home.</span></h2>
+          <div class="space-y-10 text-body-lg font-body-lg text-on-surface-variant leading-relaxed">
+            <p>현관문을 열고 들어서는 순간, 당신을 맞이하는 것은 무엇입니까? 차가운 어둠입니까, 아니면 획일적인 형광등의 불빛입니까?</p>
+            <p class="border-l border-primary/40 pl-8 py-2 italic text-warm-white">Lumei는 이 짧은 찰나의 순간에 집중했습니다. 지친 하루를 마치고 돌아온 당신에게 필요한 것은 단순한 '시야 확보'가 아니라 '정서적 포용'이기 때문입니다.</p>
+            <p>때로는 고요하게 가라앉은 새벽의 공기를 닮은 빛이 필요하고, 때로는 사랑하는 이들과의 대화를 더욱 풍성하게 만들어줄 온기 어린 빛이 필요합니다.</p>
+          </div>
+        </div>
+        <div class="w-full md:w-1/2 relative reveal-on-scroll" style="transition-delay:300ms;">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="pt-24">
+              <img alt="Editorial Lighting 1" class="w-full h-auto object-cover mb-4"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRHSJ9gUEoj_4pYqe9vE6jeOmPrEJaJwtiRLOVlnmX_ZV_IWoJl7IWvw4WKIjzM8qnl8hgK2MhGgYapOmXQ0ee-GpCLn2UBWbSWrR719s3cCX571fzjgSSOg4ifPMpNXtqTfcqdEWqohfevxfhn8n85wWybPRaIQx3z7sLm98fR_Ays_EDvfYOATkFrqMSJ0ZK5PyDh4VjLwiPuUgJLwm4ci93Sq_GMHvNFSJdlRtWqaxTi6uIN07IAC5BRx5XaQAxWcQ0KCJ194s"/>
+            </div>
+            <div>
+              <img alt="Editorial Lighting 2" class="w-full h-auto object-cover mb-4"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCw-FjpSU-KfDY3C1VJwt4f1U0F0qJxSCtW8hnglGgkbfiJZ8z2Yj7B-sGJ8xl9Ik2wtLp34bZnfeFLpcbyAExvkHjD3Dfz_6I8QKwPQ5AZXdOADUNoQDfZ6SDQ4E-d4oWY5wagSJQssJWchz17DPJPam8c-mUzxapoC-yVNRDG7U6yrd4w8qa261tmYfxFuzmo8Z6EEiOqbIW4GVPoaY6su5lssr81LorQDZeB88mGw4UKL6Rmrd-Gd64I0PYrGza95suBn_NZHaE"/>
+              <div class="bg-primary p-8 mt-4">
+                <p class="text-on-primary font-label-caps text-center">LIGHTING THE EMOTION OF SPACE</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About CTA -->
+    <section class="py-section-gap text-center px-6 reveal-on-scroll">
+      <h3 class="font-display-lg text-display-lg-mobile md:text-display-lg text-warm-white mb-12 italic">Experience the Silence of Light.</h3>
+      <button class="px-12 py-4 border border-warm-white text-warm-white font-label-caps text-label-caps hover:bg-primary hover:text-on-primary hover:border-primary transition-all duration-500 tracking-[0.2em]">
+        VIEW COLLECTIONS
+      </button>
+    </section>
+
+  </main>
+
+  <footer class="bg-surface py-section-gap px-6 md:px-desktop-margin flex flex-col items-center justify-center gap-12 border-t border-warm-white/5">
+    <div class="font-headline-lg text-headline-lg text-on-surface tracking-[0.2em] uppercase">LUMEI</div>
+    <div class="flex flex-wrap justify-center gap-10 font-body-md text-body-md">
+      <a class="text-muted-gray hover:text-primary transition-colors" href="#">Privacy Policy</a>
+      <a class="text-muted-gray hover:text-primary transition-colors" href="#">Terms of Service</a>
+      <a class="text-muted-gray hover:text-primary transition-colors" href="#">Sustainability</a>
+      <a class="text-muted-gray hover:text-primary transition-colors" href="#">Press</a>
+    </div>
+    <div class="text-muted-gray font-label-caps text-[11px] tracking-widest text-center">
+      © 2024 LUMEI. ARCHITECTURAL LIGHTING SOLUTIONS.
+    </div>
+  </footer>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════ -->
+<script>
+  /* ── Page switching ── */
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => {
+      p.classList.remove('active');
+      p.style.opacity = '0';
+    });
+
+    const target = document.getElementById('page-' + name);
+    if (!target) return;
+    target.classList.add('active');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        target.style.opacity = '1';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    // Update nav active state
+    document.querySelectorAll('.nav-link').forEach(a => {
+      a.classList.remove('text-primary', 'border-b', 'border-primary');
+      a.classList.add('text-on-surface-variant');
+      if (a.dataset.page === name) {
+        a.classList.remove('text-on-surface-variant');
+        a.classList.add('text-primary', 'border-b', 'border-primary');
+      }
+    });
+
+    if (name === 'about') setTimeout(triggerReveal, 100);
+  }
+
+  /* ── Reveal on scroll (About) ── */
+  function triggerReveal() {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('#page-about .reveal-on-scroll').forEach(el => {
+      el.classList.remove('active');
+      obs.observe(el);
+    });
+  }
+
+  /* ── Scroll: Nav shrink ── */
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('main-nav');
+    if (window.scrollY > 50) {
+      nav.classList.replace('h-20','h-16');
+      nav.style.backgroundColor = 'rgba(19, 19, 19, 0.95)';
+    } else {
+      nav.classList.replace('h-16','h-20');
+      nav.style.backgroundColor = 'rgba(26, 23, 18, 0.6)';
+    }
+
+    // Parallax for About hero
+    const heroImg = document.getElementById('about-hero-img');
+    if (heroImg && document.getElementById('page-about').classList.contains('active')) {
+      heroImg.style.transform = `translateY(${window.pageYOffset * 0.4}px)`;
+    }
+  });
+
+  /* ── Designers: card hover ── */
+  document.querySelectorAll('.designer-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      const t = card.querySelector('h3');
+      t.style.transform = 'translateX(10px)';
+      t.classList.add('text-primary');
+      t.style.transition = 'all 0.4s ease';
+    });
+    card.addEventListener('mouseleave', () => {
+      const t = card.querySelector('h3');
+      t.style.transform = 'translateX(0px)';
+      t.classList.remove('text-primary');
+    });
+  });
+
+  /* ── Init ── */
+  showPage('products');
+</script>
+
+</body>
+</html>
